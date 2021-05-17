@@ -3,12 +3,15 @@ from data import Data
 
 class Cluster:
     def __init__(self,samples,c_id):
-        self.c_id= c_id
-        self.samples= samples
+        self.c_id = c_id
+        self.samples = samples
 
     def dominate_label(self):
         labels_dict={}
-        for key in Data.get_genes_label():
+        label_lst = []
+        for sample in self.samples:
+            label_lst.append(sample.get_label())
+        for key in label_lst:
             labels_dict.setdefault(key,0)
         for sample in self.samples:
             labels_dict[sample.get_label()]+=1
@@ -28,9 +31,15 @@ class Cluster:
         return dominate_str
 
 
+    def get_c_id(self):
+        return self.c_id
+
+    def get_samples(self):
+        return self.samples
+
     def merge(self, other):
-        self.c_id=min(self.c_id,other.c_id)
-        self.samples+=other.samples
+        self.c_id=min(self.c_id,other.get_c_id())
+        self.samples += other.get_samples()
         self.samples.sort(key=lambda x: x.s_id)
         del other
 

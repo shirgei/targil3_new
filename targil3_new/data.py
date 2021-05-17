@@ -1,6 +1,7 @@
 import pandas
 from sample import  Sample
 
+
 class Data:
     def __init__(self,path):
         df = pandas.read_csv(path)
@@ -12,12 +13,11 @@ class Data:
             genes_lst=[]
             s_id=sample
             label=self.data["type"][i]
-            for key in self.data.keys()[2:]:
+            for key in list(self.data.keys())[2:]:
                 genes_lst.append(self.data[key][i])
             samples_lst.append(Sample(s_id,genes_lst,label))
         return samples_lst
 
-    def get_genes_label(self):
-         return list(set(self.data["type"]))
+
 
 
