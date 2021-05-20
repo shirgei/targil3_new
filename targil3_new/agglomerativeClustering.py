@@ -70,12 +70,11 @@ class AgglomerativeClustering:
         return sum
 
     def calculate_sample_silhoeutte(self):
-        sum=0
+        sum = 0
         for cluster in self.cluster_lst:
-            sum+=self.sum_silhoeutte(cluster)
-        sample_size=len(self.samples)
+            sum += self.sum_silhoeutte(cluster)
+        sample_size = len(self.samples)
         return sum/sample_size
-
 
     def compute_summery_silhoeutte(self):
         silhoeutte_cluster_dic = {}
@@ -87,11 +86,14 @@ class AgglomerativeClustering:
     def run(self, max_clusters):
         first = True
         min_distance = 0
+
         while len(self.cluster_lst) > max_clusters:
             for cluster in self.cluster_lst:
+                first = True
+                min_distance = 0
                 for other in self.cluster_lst:
                     if cluster.get_c_id() != other.get_c_id():
-                        temp_distance = self.link.compute(cluster,other)
+                        temp_distance = self.link.compute(cluster, other)
                         if first:
                             min_distance = temp_distance
                             first = False
@@ -101,12 +103,15 @@ class AgglomerativeClustering:
                             min_distance = temp_distance
                             cluster1 = cluster
                             cluster2 = other
-            cluster1.merge(cluster2)
-        silhoeutte_dic = self.compute_summery_silhoeutte()
-        print(len(self.cluster_lst))
+                cluster1.merge(cluster2)
+                print(len(self.cluster_lst))
+                self.cluster_lst.remove(cluster2)
+        silhouette_dic = self.compute_summery_silhoeutte()
+        print(f"Whole data {silhouette_dic[0]}")
+        self.cluster_lst.sort(key=lambda x: x.c_id)
         for cluster in self.cluster_lst:
-            silhoeutte = silhoeutte_dic[cluster.get_c_id()]
-            cluster.print_details(silhoeutte)
+            silhouette = silhouette_dic[cluster.get_c_id()]
+            cluster.print_details(silhouette)
 
 
 
